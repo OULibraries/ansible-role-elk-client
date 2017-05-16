@@ -1,0 +1,4 @@
+---
+
+- include: logstash-forwarder.yml
+  sudo: yes

@@ -1,0 +1,24 @@
+filebeat.prospectors:
+
+- input_type: log
+
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - /var/log/*.log
+    - /var/log/secure
+    - /var/log/messages
+    - /var/log/syslog-ng/*/*/*/*/*.log
+    #- c:\programdata\elasticsearch\logs\*
+
+  document-type: syslog
+
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["10.255.255.12:5443"]
+  bulk_max_size: 1024
+  ssl.certificate_authorities: ["/etc/pki/tls/certs/logstash-forwarder.crt"]
+  template.name: "filebeat"
+  template.path: "filebeat.template.json"
+  template.overwrite: false

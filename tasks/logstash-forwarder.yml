@@ -1,0 +1,49 @@
+---
+
+- name: Insert Logstash Forwarder Certificate
+  template:
+    src: logstash-forwarder.crt.j2
+    dest: /etc/pki/tls/certs/logstash-forwarder.crt
+    mode: 0644
+    owner: root
+    group: wheel
+    backup: yes
+
+- name: Import Elasticsearch Key
+  rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: Download Filebeat 5.1
+  get_url:
+    url: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.1.1-x86_64.rpm
+    dest: /tmp/
+    force: no
+
+- name: Install Filebeat via RPM file with yum
+  yum:
+    name: "/tmp/filebeat-5.1.1-x86_64.rpm"
+    state: present
+
+- name: Insert Filebeat Config Template
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+    mode: 0644
+    owner: root
+    group: wheel
+    backup: yes
+
+- name: Enable Filebeat
+  systemd:
+    name: filebeat
+    daemon_reload: yes
+    enabled: yes
+
+- name: Start Filebeat
+  systemd:
+    name: filebeat
+    state: started
+
+
+

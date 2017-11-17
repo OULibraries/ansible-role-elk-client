@@ -4,11 +4,7 @@ filebeat.prospectors:
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
-    - /var/log/*.log
-    - /var/log/secure
-    - /var/log/messages
     - /var/log/syslog-ng/*/*/*/*/*.log
-    #- c:\programdata\elasticsearch\logs\*
 
   document-type: syslog
 
@@ -16,7 +12,7 @@ filebeat.prospectors:
 #----------------------------- Logstash output --------------------------------
 output.logstash:
   # The Logstash hosts
-  hosts: ["10.255.255.12:5443"]
+  hosts: ["{{ elk_logstash_ip }}{{ elk_logstash_port }}"]
   bulk_max_size: 1024
   ssl.certificate_authorities: ["/etc/pki/tls/certs/logstash-forwarder.crt"]
   template.name: "filebeat"
